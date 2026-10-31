@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>SMLE Recall Pro</title>
+  <style>
+    :root {
+      --bg-primary: #F6F8FB;
+      --bg-surface: #FFFFFF;
+      --bg-subtle: #EDF2F7;
+      --bg-elevated: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --border-Focus: #CBD5E1;
+      --brand-primary: #0B4F6C;
+      --brand-secondary: #0D9488;
+      --brand-accent: #0284C7;
+      --brand-soft: #E0F2FE;
+      --brand-gradient: linear-gradient(135deg, #0B3B59 0%, #0D7490 100%);
+      --correct-bg: #ECFDF5;
+      --correct-border: #10B981;
+      --correct-text: #065F46;
+      --wrong-bg: #FFF1F2;
+      --wrong-border: #F43F5E;
+      --wrong-text: #9F1239;
+      --flag-color: #F59E0B;
+      --flag-bg: #FEF3C7;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+      --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 24px;
+      --stem-size: 16.5px;
+      --opt-size: 15.5px;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0B1120;
+      --bg-surface: #131C31;
+      --bg-subtle: #1E293B;
+      --bg-elevated: #18233C;
+      --text-primary: #F1F5F9;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border-color: #1E293B;
+      --border-Focus: #334155;
+      --brand-primary: #38BDF8;
+      --brand-secondary: #2DD4BF;
+      --brand-accent: #38BDF8;
+      --brand-soft: rgba(56, 189, 248, 0.14);
+      --brand-gradient: linear-gradient(135deg, #0F2942 0%, #115E59 100%);
+      --correct-bg: rgba(16, 185, 129, 0.14);
+      --correct-border: #10B981;
+      --correct-text: #6EE7B7;
+      --wrong-bg: rgba(244, 63, 94, 0.14);
+      --wrong-border: #F43F5E;
+      --wrong-text: #FDA4AF;
+      --flag-color: #FBBF24;
+      --flag-bg: rgba(245, 158, 11, 0.16);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Layout Containers */
+    .app-shell {
+      max-width: 680px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-bottom: 28px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Top App Header */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bg-primary);
+      padding: 16px 20px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--brand-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(13, 116, 144, 0.25);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 1px;
+    }
+
+    .verified-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #10B981;
+      display: inline-block;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.95);
+      background: var(--bg-subtle);
+    }
+
+    .badge-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--brand-accent);
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      padding: 0 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg-primary);
+    }
+
+    /* Mode Switcher Segmented Control */
+    .mode-switcher-wrap {
+      padding: 4px 20px 16px;
+    }
+
+    .mode-switcher {
+      background: var(--bg-subtle);
+      padding: 4px;
+      border-radius: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      border: 1px solid var(--border-color);
+    }
+
+    .mode-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14.5px;
+      font-weight: 600;
+      padding: 11px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .mode-tab.active {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mode-tab svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Search Bar Drawer */
+    .search-bar-wrap {
+      padding: 0 20px 14px;
+      display: none;
+    }
+
+    .search-bar-wrap.open {
+      display: block;
+    }
+
+    .search-input-box {
+      display: flex;
+      align-items: center;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--brand-accent);
+      border-radius: 14px;
+      padding: 0 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-input-box input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 15px;
+      padding: 12px 10px;
+      outline: none;
+    }
+
+    .search-clear-btn {
+      border: none;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Study Mode Home Content */
+    .content-pad {
+      padding: 0 20px;
+    }
+
+    .hero-bank-card {
+      background: var(--brand-gradient);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      color: #FFFFFF;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 20px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-bank-card:active {
+      transform: scale(0.985);
+    }
+
+    .hero-bank-info {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .hero-desc {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 400;
+    }
+
+    .hero-arrow {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Specialty Grid */
+    .specialty-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 11px;
+    }
+
+    @media (min-width: 520px) {
+      .specialty-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .spec-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.16s ease;
+    }
+
+    .spec-card:active {
+      transform: scale(0.98);
+      border-color: var(--brand-accent);
+    }
+
+    .spec-icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .spec-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .spec-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .spec-sub {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .spec-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .spec-count-pill {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .spec-resume-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--brand-accent);
+    }
+
+    /* Exam Mode Setup Card */
+    .exam-builder-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .exam-builder-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .exam-builder-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--brand-soft);
+      color: var(--brand-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .field-group {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .select-box {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 600;
+      outline: none;
+      appearance: none;
+    }
+
+    .chip-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .chip-row.two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .choice-chip {
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 11px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .choice-chip.selected {
+      background: var(--brand-soft);
+      border-color: var(--brand-accent);
+      color: var(--brand-accent);
+      font-weight: 700;
+    }
+
+    .primary-cta-btn {
+      width: 100%;
+      border: none;
+      background: var(--brand-gradient);
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 15px 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 16px rgba(13, 116, 144, 0.28);
+      margin-top: 8px;
+      transition: transform 0.15s ease;
+    }
+
+    .primary-cta-btn:active {
+      transform: scale(0.985);
+    }
+
+    /* Question View Header (Study & Exam) */
+    .session-top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .session-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .back-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .session-title-wrap {
+      min-width: 0;
+    }
+
+    .session-spec-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .session-counter-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .session-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .timer-pill {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 11px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--border-color);
+    }
+
+    .timer-pill.warning {
+      background: var(--wrong-bg);
+      color: var(--wrong-text);
+      border-color: var(--wrong-border);
+    }
+
+    .progress-strip {
+      height: 3px;
+      width: 100%;
+      background: var(--bg-subtle);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--brand-accent);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    /* Question Card */
+    .question-container {
+      padding: 18px 16px 96px;
+      flex: 1;
+    }
+
+    .q-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+
+    .q-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .q-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .q-num-badge {
+      background: var(--brand-soft);
+      color: var(--brand-accent);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .q-spec-badge {
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .q-stem {
+      font-size: var(--stem-size);
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.62;
+      letter-spacing: -0.005em;
+      user-select: text;
+    }
+
+    /* Options List */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .option-btn:active {
+      transform: scale(0.99);
+    }
+
+    .opt-letter-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all 0.15s ease;
+    }
+
+    .opt-text {
+      font-size: var(--opt-size);
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.45;
+      flex: 1;
+      padding-top: 3px;
+      user-select: text;
+    }
+
+    /* Option States: Study Mode */
+    .option-btn.correct {
+      background: var(--correct-bg);
+      border-color: var(--correct-border);
+    }
+
+    .option-btn.correct .opt-letter-circle {
+      background: var(--correct-border);
+      color: #FFFFFF;
+    }
+
+    .option-btn.correct .opt-text {
+      color: var(--correct-text);
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      background: var(--wrong-bg);
+      border-color: var(--wrong-border);
+    }
+
+    .option-btn.wrong .opt-letter-circle {
+      background: var(--wrong-border);
+      color: #FFFFFF;
+    }
+
+    .option-btn.wrong .opt-text {
+      color: var(--wrong-text);
+    }
+
+    /* Option States: Exam Mode Selected */
+    .option-btn.exam-selected {
+      background: var(--brand-soft);
+      border-color: var(--brand-accent);
+    }
+
+    .option-btn.exam-selected .opt-letter-circle {
+      background: var(--brand-accent);
+      color: #FFFFFF;
+    }
+
+    .option-btn.exam-selected .opt-text {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Reveal Answer Action */
+    .reveal-row {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .reveal-btn {
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Explanation Box */
+    .explanation-card {
+      margin-top: 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--correct-border);
+      border-left: 4px solid var(--correct-border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .explanation-card.visible {
+      display: block;
+    }
+
+    .exp-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--correct-border);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .exp-body {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-line;
+      user-select: text;
+    }
+
+    /* Sticky Bottom Bar for Question Navigation */
+    .bottom-nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 35;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .bottom-nav-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px 18px;
+      border-radius: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn.primary {
+      background: var(--brand-gradient);
+      color: #FFFFFF;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(13, 116, 144, 0.22);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* Exam Results Screen */
+    .result-hero-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 20px;
+    }
+
+    .score-ring {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--brand-soft);
+      border: 4px solid var(--brand-accent);
+    }
+
+    .score-pct {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .score-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .result-metrics-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin: 16px 0 20px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .result-metric-item {
+      text-align: center;
+    }
+
+    .result-metric-val {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .result-metric-lbl {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .review-filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .filter-pill {
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .filter-pill.active {
+      background: var(--brand-accent);
+      color: #FFFFFF;
+      border-color: var(--brand-accent);
+    }
+
+    /* Bottom Sheet Modal (Question Grid Navigator) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(2px);
+      z-index: 60;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .bottom-sheet {
+      width: 100%;
+      max-width: 680px;
+      max-height: 78vh;
+      background: var(--bg-surface);
+      border-radius: 24px 24px 0 0;
+      padding: 20px 20px 28px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .sheet-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+      gap: 8px;
+      overflow-y: auto;
+      padding: 4px 2px;
+    }
+
+    .q-grid-cell {
+      height: 44px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .q-grid-cell.current {
+      border-color: var(--brand-accent);
+      background: var(--brand-soft);
+      color: var(--brand-accent);
+    }
+
+    .q-grid-cell.answered-correct {
+      background: var(--correct-bg);
+      border-color: var(--correct-border);
+      color: var(--correct-text);
+    }
+
+    .q-grid-cell.answered-wrong {
+      background: var(--wrong-bg);
+      border-color: var(--wrong-border);
+      color: var(--wrong-text);
+    }
+
+    .q-grid-cell.exam-answered {
+      background: var(--brand-accent);
+      border-color: var(--brand-accent);
+      color: #FFFFFF;
+    }
+
+    .q-grid-cell.flagged::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--flag-color);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 44px 20px;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ================= HOME SCREEN ================= -->
+    <section id="home-screen" class="screen active">
+      <header class="top-header">
+        <div class="brand-group">
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/>
+              <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/>
+              <circle cx="20" cy="10" r="2"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">SMLE Recall Pro</h1>
+            <div class="brand-subtitle">
+              <span class="verified-dot"></span>
+              <span id="total-bank-label">2026 Verified Recall Bank</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" id="btn-toggle-search" title="Search Questions" aria-label="Search Questions">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+          </button>
+          <button class="icon-btn" id="btn-open-bookmarks" title="Saved Questions" aria-label="Saved Questions">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+            </svg>
+            <span class="badge-count" id="bookmark-badge" style="display:none;">0</span>
+          </button>
+          <button class="icon-btn" id="btn-theme-toggle" title="Toggle Dark Mode" aria-label="Toggle Theme">
+            <svg id="theme-icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Search Drawer -->
+      <div class="search-bar-wrap" id="search-drawer">
+        <div class="search-input-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted)">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search by clinical topic, drug, or Recall #..." autocomplete="off" />
+          <button class="search-clear-btn" id="btn-clear-search" title="Clear">✕</button>
+        </div>
+      </div>
+
+      <!-- Mode Switcher: Study Mode vs Exam Mode -->
+      <div class="mode-switcher-wrap">
+        <div class="mode-switcher" role="tablist">
+          <button class="mode-tab active" id="tab-study-mode" role="tab" aria-selected="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            <span>Study Mode</span>
+          </button>
+          <button class="mode-tab" id="tab-exam-mode" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Exam Mode</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STUDY MODE PANEL -->
+      <div id="panel-study" class="content-pad">
+        <div class="hero-bank-card" id="card-all-questions">
+          <div class="hero-bank-info">
+            <div class="hero-pill">
+              <span>COMPLETE VERIFIED BANK</span>
+            </div>
+            <div class="hero-title">All Confirmed Questions</div>
+            <div class="hero-desc" id="hero-all-count">525 verified MCQs with instant explanations</div>
+          </div>
+          <div class="hero-arrow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="section-label">
+          <span id="specialty-section-heading">Study by Specialty</span>
+          <span id="specialty-total-Right">7 Categories</span>
+        </div>
+
+        <div class="specialty-grid" id="specialty-grid"></div>
+      </div>
+
+      <!-- EXAM MODE PANEL -->
+      <div id="panel-exam" class="content-pad" style="display:none;">
+        <div class="exam-builder-card">
+          <div class="exam-builder-header">
+            <div class="exam-builder-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+            </div>
+            <div>
+              <h2 style="font-size:17.5px; font-weight:700;">SMLE Exam Simulation</h2>
+              <p style="font-size:13px; color:var(--text-secondary);">Test yourself under exam conditions with hidden answers until submission.</p>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="exam-specialty-select">Specialty Scope</label>
+            <select id="exam-specialty-select" class="select-box"></select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Number of Questions</label>
+            <div class="chip-row" id="exam-count-chips">
+              <button type="button" class="choice-chip" data-count="10">10 Qs</button>
+              <button type="button" class="choice-chip selected" data-count="25">25 Qs</button>
+              <button type="button" class="choice-chip" data-count="50">50 Qs</button>
+              <button type="button" class="choice-chip" data-count="100">100 Qs</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Timer Mode</label>
+            <div class="chip-row two-col" id="exam-timer-chips">
+              <button type="button" class="choice-chip selected" data-timed="true">Timed (90s / Q)</button>
+              <button type="button" class="choice-chip" data-timed="false">Untimed Mode</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Question Selection</label>
+            <div class="chip-row two-col" id="exam-order-chips">
+              <button type="button" class="choice-chip selected" data-shuffle="true">Randomized Shuffle</button>
+              <button type="button" class="choice-chip" data-shuffle="false">Sequential Order</button>
+            </div>
+          </div>
+
+          <button type="button" class="primary-cta-btn" id="btn-start-exam">
+            <span>Start Exam Block</span>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUESTION SESSION SCREEN (STUDY & EXAM) ================= -->
+    <section id="session-screen" class="screen">
+      <div class="session-top-bar">
+        <div class="session-nav-left">
+          <button class="back-btn" id="btn-leave-session" title="Back" aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          </button>
+          <div class="session-title-wrap">
+            <div class="session-spec-title" id="session-title">Pediatrics</div>
+            <div class="session-counter-sub" id="session-counter">Question 1 of 148</div>
+          </div>
+        </div>
+
+        <div class="session-actions">
+          <div class="timer-pill" id="exam-timer-pill" style="display:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span id="exam-timer-text">37:30</span>
+          </div>
+
+          <button class="icon-btn" id="btn-font-size" title="Text Size" style="width:38px;height:38px;font-weight:700;font-size:13px;">Aa</button>
+
+          <button class="icon-btn" id="btn-bookmark-q" title="Bookmark Question" style="width:38px;height:38px;">
+            <svg id="icon-bookmark-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+            </svg>
+          </button>
+
+          <button class="icon-btn" id="btn-open-grid" title="Question Navigator" style="width:38px;height:38px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/>
+              <rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="progress-strip">
+        <div class="progress-fill" id="session-progress-bar"></div>
+      </div>
+
+      <div class="question-container" id="question-touch-area">
+        <div class="q-card">
+          <div class="q-meta-row">
+            <div class="q-badge-group">
+              <span class="q-num-badge" id="q-recall-num">Recall #1</span>
+              <span class="q-spec-badge" id="q-spec-tag">Pediatrics</span>
+            </div>
+            <button class="reveal-btn" id="btn-exam-submit-top" style="display:none; padding:5px 11px; font-size:12px; color:var(--brand-accent); border-color:var(--brand-accent);">
+              Finish Exam
+            </button>
+          </div>
+          <div class="q-stem" id="q-stem-text"></div>
+        </div>
+
+        <div class="options-list" id="q-options-list"></div>
+
+        <div class="reveal-row" id="study-reveal-row">
+          <button type="button" class="reveal-btn" id="btn-reveal-answer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Show Confirmed Answer</span>
+          </button>
+        </div>
+
+        <div class="explanation-card" id="q-explanation-card">
+          <div class="exp-header">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span id="exp-answer-heading">Confirmed Answer: A</span>
+          </div>
+          <div class="exp-body" id="exp-body-text"></div>
+        </div>
+      </div>
+
+      <div class="bottom-nav-bar">
+        <div class="bottom-nav-inner">
+          <button type="button" class="nav-btn" id="btn-prev-q">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+            <span>Previous</span>
+          </button>
+          <button type="button" class="nav-btn primary" id="btn-next-q">
+            <span id="next-btn-label">Next Question</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= EXAM RESULTS & REVIEW SCREEN ================= -->
+    <section id="results-screen" class="screen">
+      <div class="session-top-bar">
+        <div class="session-nav-left">
+          <button class="back-btn" id="btn-results-home" title="Back to Home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          </button>
+          <div class="session-title-wrap">
+            <div class="session-spec-title">Exam Summary & Review</div>
+            <div class="session-counter-sub" id="results-subtitle">Completed Block</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-pad" style="padding-top:18px;">
+        <div class="result-hero-card">
+          <div class="score-ring" id="result-score-ring">
+            <div class="score-pct" id="result-score-pct">85%</div>
+            <div class="score-label">SCORE</div>
+          </div>
+          <h2 style="font-size:19px; font-weight:700;" id="result-status-title">Exam Block Complete</h2>
+          <div class="result-metrics-row">
+            <div class="result-metric-item">
+              <div class="result-metric-val" id="res-correct-count" style="color:var(--correct-border)">0</div>
+              <div class="result-metric-lbl">Correct</div>
+            </div>
+            <div class="result-metric-item">
+              <div class="result-metric-val" id="res-wrong-count" style="color:var(--wrong-border)">0</div>
+              <div class="result-metric-lbl">Incorrect</div>
+            </div>
+            <div class="result-metric-item">
+              <div class="result-metric-val" id="res-unanswered-count">0</div>
+              <div class="result-metric-lbl">Unanswered</div>
+            </div>
+            <div class="result-metric-item">
+              <div class="result-metric-val" id="res-time-spent">00:00</div>
+              <div class="result-metric-lbl">Time</div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button type="button" class="nav-btn" id="btn-retake-exam">New Exam</button>
+            <button type="button" class="nav-btn primary" id="btn-done-exam">Back to Home</button>
+          </div>
+        </div>
+
+        <div class="section-label">
+          <span>Review Questions</span>
+        </div>
+
+        <div class="review-filter-bar" id="review-filter-bar">
+          <button type="button" class="filter-pill active" data-filter="all">All Questions</button>
+          <button type="button" class="filter-pill" data-filter="wrong">Incorrect / Unanswered</button>
+          <button type="button" class="filter-pill" data-filter="flagged">Flagged</button>
+        </div>
+
+        <div id="exam-review-list" style="display:flex; flex-direction:column; gap:14px;"></div>
+      </div>
+    </section>
+
+    <!-- ================= QUESTION NAVIGATOR BOTTOM SHEET ================= -->
+    <div class="modal-backdrop" id="grid-modal">
+      <div class="bottom-sheet">
+        <div class="sheet-header">
+          <div class="sheet-title" id="grid-sheet-title">Jump to Question</div>
+          <button class="search-clear-btn" id="btn-close-grid" style="width:30px;height:30px;font-size:14px;">✕</button>
+        </div>
+        <div class="q-grid" id="navigator-grid"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="questions_data.js"></script>
+  <script>
+    (function() {
+      const QUESTIONS = window.SMLE_QUESTIONS || [];
+
+      const SPECIALTY_META = {
+        "Pediatrics": {
+          sub: "Neonatology, growth, vaccines & acute care",
+          bg: "rgba(14, 165, 233, 0.12)",
+          color: "#0284C7",
+          icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>`
+        },
+        "Obstetrics & Gynecology": {
+          sub: "Antenatal care, labor, postpartum & gynecology",
+          bg: "rgba(244, 63, 94, 0.12)",
+          color: "#E11D48",
+          icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`
+        },
+        "Internal Medicine": {
+          sub: "Cardiology, pulmonology, GI, renal & neurology",
+          bg: "rgba(13, 148, 136, 0.12)",
+          color: "#0D9488",
+          icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`
+        },
+        "Surgery": {
+          sub: "General, trauma, vascular, urology & orthopedics",
+          bg: "rgba(99, 102, 241, 0.12)",
+          color: "#4F46E5",
+          icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg>`
+        },
+        "Ethics & Biostatistics": {
+          sub: "Medical ethics, patient safety & epidemiology",
+          bg: "rgba(245, 158, 11, 0.12)",
+          color: "#D97706",
+          icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>`
+        },
+        "Psychiatry": {
+          sub: "Behavioral medicine & psychopharmacology",
+          bg: "rgba(168, 85, 247, 0.12)",
+          color: "#9333EA",
+          icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>`
+        },
+        "Uncategorized": {
+          sub: "General clinical & cross-disciplinary recalls",
+          bg: "rgba(100, 116, 139, 0.12)",
+          color: "#475569",
+          icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>`
+        }
+      };
+
+      const SPECIALTY_ORDER = [
+        "Pediatrics",
+        "Obstetrics & Gynecology",
+        "Internal Medicine",
+        "Surgery",
+        "Ethics & Biostatistics",
+        "Psychiatry",
+        "Uncategorized"
+      ];
+
+      function safeGet(key, fallback) {
+        try {
+          if (window.AndroidBridge && window.AndroidBridge.getPref) {
+            const v = window.AndroidBridge.getPref(key);
+            if (v !== null && v !== undefined && v !== '') return v;
+          }
+          const val = window.localStorage.getItem(key);
+          return val !== null ? val : fallback;
+        } catch (e) {
+          return fallback;
+        }
+      }
+
+      function safeSet(key, val) {
+        try {
+          if (window.AndroidBridge && window.AndroidBridge.setPref) {
+            window.AndroidBridge.setPref(key, String(val));
+          }
+          window.localStorage.setItem(key, String(val));
+        } catch (e) {}
+      }
+
+      // Persistent State
+      let state = {
+        theme: safeGet('smle_theme', 'light'),
+        fontScale: parseInt(safeGet('smle_font_scale', '0'), 10),
+        bookmarks: JSON.parse(safeGet('smle_bookmarks', '[]')),
+        lastIndexBySpec: JSON.parse(safeGet('smle_last_idx', '{}')),
+        studyAnswers: {},
+        // Active Session
+        mode: 'study', // 'study' | 'exam'
+        sessionTitle: '',
+        sessionKey: '',
+        activeList: [],
+        currentIndex: 0,
+        // Exam Specific
+        examConfig: {
+          specialty: 'ALL',
+          count: 25,
+          timed: true,
+          shuffle: true
+        },
+        examSelections: {},
+        examFlags: {},
+        examTimerSec: 0,
+        examElapsedSec: 0,
+        examInterval: null
+      };
+
+      function saveBookmarks() {
+        safeSet('smle_bookmarks', JSON.stringify(state.bookmarks));
+        updateBookmarkBadge();
+      }
+
+      function saveLastIndex(key, idx) {
+        if (key && !key.startsWith('SEARCH')) {
+          state.lastIndexBySpec[key] = idx;
+          safeSet('smle_last_idx', JSON.stringify(state.lastIndexBySpec));
+        }
+      }
+
+      function applyTheme(t) {
+        state.theme = t;
+        document.documentElement.setAttribute('data-theme', t);
+        safeSet('smle_theme', t);
+        if (window.AndroidBridge && window.AndroidBridge.setStatusBarTheme) {
+          window.AndroidBridge.setStatusBarTheme(t);
+        }
+      }
+
+      function applyFontScale() {
+        const stemSizes = ['16.5px', '18px', '19.5px'];
+        const optSizes = ['15.5px', '17px', '18px'];
+        document.documentElement.style.setProperty('--stem-size', stemSizes[state.fontScale] || '16.5px');
+        document.documentElement.style.setProperty('--opt-size', optSizes[state.fontScale] || '15.5px');
+        safeSet('smle_font_scale', String(state.fontScale));
+      }
+
+      function updateBookmarkBadge() {
+        const b = document.getElementById('bookmark-badge');
+        if (state.bookmarks.length > 0) {
+          b.style.display = 'flex';
+          b.textContent = state.bookmarks.length;
+        } else {
+          b.style.display = 'none';
+        }
+      }
+
+      function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0, 0);
+      }
+
+      // Render Specialty Cards on Study Mode Home
+      function renderHomeStudy() {
+        document.getElementById('total-bank-label').textContent = `${QUESTIONS.length} Verified Recalls • 2026`;
+        document.getElementById('hero-all-count').textContent = `${QUESTIONS.length} complete MCQs with confirmed answers`;
+
+        const counts = {};
+        QUESTIONS.forEach(q => {
+          counts[q.specialty] = (counts[q.specialty] || 0) + 1;
+        });
+
+        const grid = document.getElementById('specialty-grid');
+        grid.innerHTML = '';
+
+        SPECIALTY_ORDER.forEach(spec => {
+          const count = counts[spec] || 0;
+          if (count === 0) return;
+          const meta = SPECIALTY_META[spec] || SPECIALTY_META["Uncategorized"];
+          const savedIdx = state.lastIndexBySpec[spec];
+          const resumeHtml = (typeof savedIdx === 'number' && savedIdx > 0 && savedIdx < count)
+            ? `<span class="spec-resume-tag">Resume #${savedIdx + 1}</span>`
+            : '';
+
+          const card = document.createElement('div');
+          card.className = 'spec-card';
+          card.innerHTML = `
+            <div class="spec-icon-box" style="background:${meta.bg}; color:${meta.color}">
+              ${meta.icon}
+            </div>
+            <div class="spec-body">
+              <div class="spec-title">${spec}</div>
+              <div class="spec-sub">${meta.sub}</div>
+            </div>
+            <div class="spec-meta">
+              <span class="spec-count-pill">${count} Qs</span>
+              ${resumeHtml}
+            </div>
+          `;
+          card.addEventListener('click', () => startStudySession(spec, QUESTIONS.filter(q => q.specialty === spec), spec));
+          grid.appendChild(card);
+        });
+
+        // Populate Exam Specialty Dropdown
+        const sel = document.getElementById('exam-specialty-select');
+        sel.innerHTML = `<option value="ALL">All Specialties (${QUESTIONS.length} Questions)</option>`;
+        SPECIALTY_ORDER.forEach(spec => {
+          const c = counts[spec] || 0;
+          if (c > 0) {
+            sel.innerHTML += `<option value="${spec}">${spec} (${c} Questions)</option>`;
+          }
+        });
+      }
+
+      // Start Study Session
+      function startStudySession(title, list, key) {
+        if (!list || list.length === 0) return;
+        state.mode = 'study';
+        state.sessionTitle = title;
+        state.sessionKey = key || title;
+        state.activeList = list;
+        const savedIdx = state.lastIndexBySpec[state.sessionKey];
+        state.currentIndex = (typeof savedIdx === 'number' && savedIdx >= 0 && savedIdx < list.length) ? savedIdx : 0;
+
+        document.getElementById('exam-timer-pill').style.display = 'none';
+        document.getElementById('btn-exam-submit-top').style.display = 'none';
+        document.getElementById('study-reveal-row').style.display = 'flex';
+        showScreen('session-screen');
+        renderCurrentQuestion();
+      }
+
+      // Start Exam Session
+      function startExamSession() {
+        const spec = document.getElementById('exam-specialty-select').value;
+        let pool = (spec === 'ALL') ? [...QUESTIONS] : QUESTIONS.filter(q => q.specialty === spec);
+        if (pool.length === 0) return;
+
+        if (state.examConfig.shuffle) {
+          for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+          }
+        }
+
+        const chosen = pool.slice(0, Math.min(state.examConfig.count, pool.length));
+        state.mode = 'exam';
+        state.sessionTitle = (spec === 'ALL') ? 'SMLE Mixed Exam' : `${spec} Exam`;
+        state.sessionKey = 'EXAM';
+        state.activeList = chosen;
+        state.currentIndex = 0;
+        state.examSelections = {};
+        state.examFlags = {};
+        state.examElapsedSec = 0;
+
+        if (state.examInterval) clearInterval(state.examInterval);
+        const timerPill = document.getElementById('exam-timer-pill');
+
+        if (state.examConfig.timed) {
+          state.examTimerSec = chosen.length * 90;
+          timerPill.style.display = 'flex';
+          updateTimerUI();
+          state.examInterval = setInterval(() => {
+            state.examElapsedSec++;
+            state.examTimerSec--;
+            if (state.examTimerSec <= 0) {
+              clearInterval(state.examInterval);
+              finishExamSession();
+            } else {
+              updateTimerUI();
+            }
+          }, 1000);
+        } else {
+          timerPill.style.display = 'none';
+          state.examInterval = setInterval(() => {
+            state.examElapsedSec++;
+          }, 1000);
+        }
+
+        document.getElementById('btn-exam-submit-top').style.display = 'inline-flex';
+        document.getElementById('study-reveal-row').style.display = 'none';
+        showScreen('session-screen');
+        renderCurrentQuestion();
+      }
+
+      function updateTimerUI() {
+        const m = Math.floor(state.examTimerSec / 60);
+        const s = state.examTimerSec % 60;
+        const txt = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        const el = document.getElementById('exam-timer-text');
+        const pill = document.getElementById('exam-timer-pill');
+        el.textContent = txt;
+        if (state.examTimerSec < 120) {
+          pill.classList.add('warning');
+        } else {
+          pill.classList.remove('warning');
+        }
+      }
+
+      // Render Active Question
+      function renderCurrentQuestion() {
+        const q = state.activeList[state.currentIndex];
+        if (!q) return;
+
+        const total = state.activeList.length;
+        const pos = state.currentIndex + 1;
+        document.getElementById('session-title').textContent = state.sessionTitle;
+        document.getElementById('session-counter').textContent = `Question ${pos} of ${total}`;
+        document.getElementById('session-progress-bar').style.width = `${(pos / total) * 100}%`;
+
+        document.getElementById('q-recall-num').textContent = `Recall #${q.q_num}`;
+        document.getElementById('q-spec-tag').textContent = q.specialty;
+        document.getElementById('q-stem-text').textContent = q.stem;
+
+        // Bookmark / Flag icon state
+        const bmBtn = document.getElementById('btn-bookmark-q');
+        const bmSvg = document.getElementById('icon-bookmark-svg');
+        if (state.mode === 'study') {
+          const isSaved = state.bookmarks.includes(q.id);
+          bmSvg.setAttribute('fill', isSaved ? 'currentColor' : 'none');
+          bmBtn.style.color = isSaved ? 'var(--brand-accent)' : 'var(--text-primary)';
+        } else {
+          const isFlagged = !!state.examFlags[q.id];
+          bmSvg.setAttribute('fill', isFlagged ? 'currentColor' : 'none');
+          bmBtn.style.color = isFlagged ? 'var(--flag-color)' : 'var(--text-primary)';
+        }
+
+        // Render options
+        const optContainer = document.getElementById('q-options-list');
+        optContainer.innerHTML = '';
+
+        const chosenAns = (state.mode === 'study') ? state.studyAnswers[q.id] : state.examSelections[q.id];
+
+        q.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'option-btn';
+
+          if (state.mode === 'study' && chosenAns) {
+            if (opt.letter === q.answer) {
+              btn.classList.add('correct');
+            } else if (opt.letter === chosenAns && chosenAns !== q.answer) {
+              btn.classList.add('wrong');
+            }
+          } else if (state.mode === 'exam' && chosenAns === opt.letter) {
+            btn.classList.add('exam-selected');
+          }
+
+          btn.innerHTML = `
+            <span class="opt-letter-circle">${opt.letter}</span>
+            <span class="opt-text">${opt.text}</span>
+          `;
+
+          btn.addEventListener('click', () => {
+            if (state.mode === 'study') {
+              state.studyAnswers[q.id] = opt.letter;
+              renderCurrentQuestion();
+            } else {
+              state.examSelections[q.id] = opt.letter;
+              renderCurrentQuestion();
+            }
+          });
+
+          optContainer.appendChild(btn);
+        });
+
+        // Explanation card in Study Mode
+        const expCard = document.getElementById('q-explanation-card');
+        const revealRow = document.getElementById('study-reveal-row');
+
+        if (state.mode === 'study') {
+          if (chosenAns) {
+            revealRow.style.display = 'none';
+            expCard.classList.add('visible');
+            const correctOpt = q.options.find(o => o.letter === q.answer);
+            const correctLabel = correctOpt ? `${q.answer} — ${correctOpt.text}` : q.answer;
+            document.getElementById('exp-answer-heading').textContent = `Confirmed Answer: ${correctLabel}`;
+            document.getElementById('exp-body-text').textContent = q.explanation
+              ? q.explanation
+              : 'Verified SMLE recall answer confirmed by board guidelines.';
+          } else {
+            revealRow.style.display = 'flex';
+            expCard.classList.remove('visible');
+          }
+          saveLastIndex(state.sessionKey, state.currentIndex);
+        } else {
+          revealRow.style.display = 'none';
+          expCard.classList.remove('visible');
+        }
+
+        // Prev / Next buttons
+        document.getElementById('btn-prev-q').disabled = (state.currentIndex === 0);
+        const nextLbl = document.getElementById('next-btn-label');
+        if (state.currentIndex === total - 1) {
+          nextLbl.textContent = (state.mode === 'exam') ? 'Finish Exam' : 'Done';
+        } else {
+          nextLbl.textContent = 'Next Question';
+        }
+      }
+
+      // Finish Exam & Show Summary
+      function finishExamSession() {
+        if (state.examInterval) {
+          clearInterval(state.examInterval);
+          state.examInterval = null;
+        }
+
+        const total = state.activeList.length;
+        let correct = 0;
+        let wrong = 0;
+        let unanswered = 0;
+
+        state.activeList.forEach(q => {
+          const sel = state.examSelections[q.id];
+          if (!sel) {
+            unanswered++;
+          } else if (sel === q.answer) {
+            correct++;
+          } else {
+            wrong++;
+          }
+        });
+
+        const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+        document.getElementById('result-score-pct').textContent = `${pct}%`;
+        document.getElementById('res-correct-count').textContent = String(correct);
+        document.getElementById('res-wrong-count').textContent = String(wrong);
+        document.getElementById('res-unanswered-count').textContent = String(unanswered);
+
+        const em = Math.floor(state.examElapsedSec / 60);
+        const es = state.examElapsedSec % 60;
+        document.getElementById('res-time-spent').textContent = `${String(em).padStart(2, '0')}:${String(es).padStart(2, '0')}`;
+        document.getElementById('results-subtitle').textContent = `${state.sessionTitle} • ${total} Questions`;
+
+        renderExamReviewList('all');
+        showScreen('results-screen');
+      }
+
+      function renderExamReviewList(filter) {
+        document.querySelectorAll('#review-filter-bar .filter-pill').forEach(p => {
+          p.classList.toggle('active', p.getAttribute('data-filter') === filter);
+        });
+
+        const container = document.getElementById('exam-review-list');
+        container.innerHTML = '';
+
+        const filtered = state.activeList.filter(q => {
+          const sel = state.examSelections[q.id];
+          if (filter === 'wrong') return sel !== q.answer;
+          if (filter === 'flagged') return !!state.examFlags[q.id];
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          container.innerHTML = `<div class="empty-state">No questions match this filter.</div>`;
+          return;
+        }
+
+        filtered.forEach((q, idx) => {
+          const userSel = state.examSelections[q.id];
+          const isCorrect = (userSel === q.answer);
+          const card = document.createElement('div');
+          card.className = 'q-card';
+          card.style.marginBottom = '0';
+
+          let optsHtml = '';
+          q.options.forEach(o => {
+            let cls = 'option-btn';
+            if (o.letter === q.answer) cls += ' correct';
+            else if (o.letter === userSel && userSel !== q.answer) cls += ' wrong';
+            optsHtml += `
+              <div class="${cls}" style="pointer-events:none; padding:11px 14px;">
+                <span class="opt-letter-circle">${o.letter}</span>
+                <span class="opt-text">${o.text}</span>
+              </div>
+            `;
+          });
+
+          const statusTag = !userSel
+            ? `<span class="q-spec-badge" style="background:var(--wrong-bg);color:var(--wrong-text);">Unanswered</span>`
+            : isCorrect
+              ? `<span class="q-spec-badge" style="background:var(--correct-bg);color:var(--correct-text);">Correct</span>`
+              : `<span class="q-spec-badge" style="background:var(--wrong-bg);color:var(--wrong-text);">Your Answer: ${userSel}</span>`;
+
+          const expHtml = q.explanation
+            ? `<div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border-color); font-size:14px; color:var(--text-secondary); white-space:pre-line;">${q.explanation}</div>`
+            : '';
+
+          card.innerHTML = `
+            <div class="q-meta-row">
+              <div class="q-badge-group">
+                <span class="q-num-badge">Recall #${q.q_num}</span>
+                <span class="q-spec-badge">${q.specialty}</span>
+              </div>
+              ${statusTag}
+            </div>
+            <div class="q-stem" style="margin-bottom:14px;">${q.stem}</div>
+            <div class="options-list">${optsHtml}</div>
+            ${expHtml}
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      // Question Grid Navigator Modal
+      function openNavigatorGrid() {
+        const modal = document.getElementById('grid-modal');
+        const grid = document.getElementById('navigator-grid');
+        grid.innerHTML = '';
+
+        state.activeList.forEach((q, idx) => {
+          const cell = document.createElement('button');
+          cell.type = 'button';
+          cell.className = 'q-grid-cell';
+          cell.textContent = String(idx + 1);
+
+          if (idx === state.currentIndex) cell.classList.add('current');
+
+          if (state.mode === 'study') {
+            const ans = state.studyAnswers[q.id];
+            if (ans === q.answer) cell.classList.add('answered-correct');
+            else if (ans) cell.classList.add('answered-wrong');
+            if (state.bookmarks.includes(q.id)) cell.classList.add('flagged');
+          } else {
+            if (state.examSelections[q.id]) cell.classList.add('exam-answered');
+            if (state.examFlags[q.id]) cell.classList.add('flagged');
+          }
+
+          cell.addEventListener('click', () => {
+            state.currentIndex = idx;
+            modal.classList.remove('open');
+            renderCurrentQuestion();
+            window.scrollTo(0, 0);
+          });
+          grid.appendChild(cell);
+        });
+
+        modal.classList.add('open');
+      }
+
+      // Wire Up Event Listeners
+      document.getElementById('btn-theme-toggle').addEventListener('click', () => {
+        applyTheme(state.theme === 'light' ? 'dark' : 'light');
+      });
+
+      document.getElementById('tab-study-mode').addEventListener('click', () => {
+        document.getElementById('tab-study-mode').classList.add('active');
+        document.getElementById('tab-exam-mode').classList.remove('active');
+        document.getElementById('panel-study').style.display = 'block';
+        document.getElementById('panel-exam').style.display = 'none';
+      });
+
+      document.getElementById('tab-exam-mode').addEventListener('click', () => {
+        document.getElementById('tab-exam-mode').classList.add('active');
+        document.getElementById('tab-study-mode').classList.remove('active');
+        document.getElementById('panel-exam').style.display = 'block';
+        document.getElementById('panel-study').style.display = 'none';
+      });
+
+      document.getElementById('card-all-questions').addEventListener('click', () => {
+        startStudySession('All Verified Questions', QUESTIONS, 'ALL_QUESTIONS');
+      });
+
+      document.getElementById('btn-open-bookmarks').addEventListener('click', () => {
+        const savedList = QUESTIONS.filter(q => state.bookmarks.includes(q.id));
+        if (savedList.length === 0) {
+          alert('No bookmarked questions yet. Tap the bookmark icon on any question during Study Mode to save it here.');
+          return;
+        }
+        startStudySession('Saved Bookmarks', savedList, 'BOOKMARKS');
+      });
+
+      // Search functionality
+      const searchDrawer = document.getElementById('search-drawer');
+      const searchInput = document.getElementById('search-input');
+
+      document.getElementById('btn-toggle-search').addEventListener('click', () => {
+        searchDrawer.classList.toggle('open');
+        if (searchDrawer.classList.contains('open')) {
+          searchInput.focus();
+        }
+      });
+
+      document.getElementById('btn-clear-search').addEventListener('click', () => {
+        searchInput.value = '';
+        searchDrawer.classList.remove('open');
+      });
+
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const term = searchInput.value.trim().toLowerCase();
+          if (!term) return;
+          const matches = QUESTIONS.filter(q =>
+            String(q.q_num) === term.replace('#', '') ||
+            q.stem.toLowerCase().includes(term) ||
+            q.options.some(o => o.text.toLowerCase().includes(term)) ||
+            (q.explanation && q.explanation.toLowerCase().includes(term))
+          );
+          if (matches.length === 0) {
+            alert(`No verified questions found matching "${searchInput.value}".`);
+            return;
+          }
+          startStudySession(`Search: "${searchInput.value}"`, matches, 'SEARCH');
+        }
+      });
+
+      // Exam Builder Chips
+      document.querySelectorAll('#exam-count-chips .choice-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#exam-count-chips .choice-chip').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.examConfig.count = parseInt(btn.getAttribute('data-count'), 10);
+        });
+      });
+
+      document.querySelectorAll('#exam-timer-chips .choice-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#exam-timer-chips .choice-chip').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.examConfig.timed = (btn.getAttribute('data-timed') === 'true');
+        });
+      });
+
+      document.querySelectorAll('#exam-order-chips .choice-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#exam-order-chips .choice-chip').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.examConfig.shuffle = (btn.getAttribute('data-shuffle') === 'true');
+        });
+      });
+
+      document.getElementById('btn-start-exam').addEventListener('click', startExamSession);
+
+      // Session Controls
+      document.getElementById('btn-leave-session').addEventListener('click', () => {
+        if (state.mode === 'exam') {
+          if (!confirm('Leave current exam and view your score so far?')) return;
+          finishExamSession();
+        } else {
+          renderHomeStudy();
+          showScreen('home-screen');
+        }
+      });
+
+      document.getElementById('btn-exam-submit-top').addEventListener('click', () => {
+        finishExamSession();
+      });
+
+      document.getElementById('btn-font-size').addEventListener('click', () => {
+        state.fontScale = (state.fontScale + 1) % 3;
+        applyFontScale();
+      });
+
+      document.getElementById('btn-bookmark-q').addEventListener('click', () => {
+        const q = state.activeList[state.currentIndex];
+        if (!q) return;
+        if (state.mode === 'study') {
+          const idx = state.bookmarks.indexOf(q.id);
+          if (idx >= 0) state.bookmarks.splice(idx, 1);
+          else state.bookmarks.push(q.id);
+          saveBookmarks();
+        } else {
+          state.examFlags[q.id] = !state.examFlags[q.id];
+        }
+        renderCurrentQuestion();
+      });
+
+      document.getElementById('btn-reveal-answer').addEventListener('click', () => {
+        const q = state.activeList[state.currentIndex];
+        if (!q) return;
+        state.studyAnswers[q.id] = q.answer;
+        renderCurrentQuestion();
+      });
+
+      document.getElementById('btn-prev-q').addEventListener('click', () => {
+        if (state.currentIndex > 0) {
+          state.currentIndex--;
+          renderCurrentQuestion();
+          window.scrollTo(0, 0);
+        }
+      });
+
+      document.getElementById('btn-next-q').addEventListener('click', () => {
+        if (state.currentIndex < state.activeList.length - 1) {
+          state.currentIndex++;
+          renderCurrentQuestion();
+          window.scrollTo(0, 0);
+        } else {
+          if (state.mode === 'exam') {
+            finishExamSession();
+          } else {
+            renderHomeStudy();
+            showScreen('home-screen');
+          }
+        }
+      });
+
+      document.getElementById('btn-open-grid').addEventListener('click', openNavigatorGrid);
+      document.getElementById('btn-close-grid').addEventListener('click', () => {
+        document.getElementById('grid-modal').classList.remove('open');
+      });
+      document.getElementById('grid-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'grid-modal') {
+          document.getElementById('grid-modal').classList.remove('open');
+        }
+      });
+
+      // Results Screen Controls
+      document.querySelectorAll('#review-filter-bar .filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          renderExamReviewList(btn.getAttribute('data-filter'));
+        });
+      });
+
+      document.getElementById('btn-retake-exam').addEventListener('click', () => {
+        showScreen('home-screen');
+        document.getElementById('tab-exam-mode').click();
+      });
+
+      document.getElementById('btn-done-exam').addEventListener('click', () => {
+        renderHomeStudy();
+        showScreen('home-screen');
+      });
+
+      document.getElementById('btn-results-home').addEventListener('click', () => {
+        renderHomeStudy();
+        showScreen('home-screen');
+      });
+
+      // Handle Hardware Back Button from Android Kotlin
+      window.handleAndroidBack = function() {
+        const gridModal = document.getElementById('grid-modal');
+        if (gridModal.classList.contains('open')) {
+          gridModal.classList.remove('open');
+          return true;
+        }
+        if (document.getElementById('session-screen').classList.contains('active')) {
+          document.getElementById('btn-leave-session').click();
+          return true;
+        }
+        if (document.getElementById('results-screen').classList.contains('active')) {
+          renderHomeStudy();
+          showScreen('home-screen');
+          return true;
+        }
+        return false;
+      };
+
+      // Init
+      applyTheme(state.theme);
+      applyFontScale();
+      updateBookmarkBadge();
+      renderHomeStudy();
+    })();
+  </script>
+</body>
+</html>
